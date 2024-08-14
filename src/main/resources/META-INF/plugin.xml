@@ -30,7 +30,7 @@
         ]]>
 
     </description>
-    
+
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
@@ -40,26 +40,12 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-<!--        报错居然不影响运行？-->
         <postStartupActivity implementation="io.vortex.cvtr.PsiTypeEnsurance"/>
+
+        <notificationGroup displayType="BALLOON" id="CvtrNotificationGroup"/>
     </extensions>
 
     <actions>
-        <!--        <action id="io.vortex.cvtr.trash.ShowProjectNameAction" class="io.vortex.cvtr.trash.ShowProjectNameAction" text="show project name with popup dialog">-->
-        <!--            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="About"/>-->
-        <!--        </action>-->
-
-        <group id="CvtrDemo.HelloAction" text="Cvtr Idea Plugin Demo" description="About this idea plugin">
-            <!--            <add-to-group group-id="MainMenu" anchor="last"/>-->
-            <!--            <action id="io.vortex.cvtr.trash.ShowProjectNameAction" class="io.vortex.cvtr.trash.ShowProjectNameAction" text="show project name with popup dialog">-->
-            <!--&lt;!&ndash;                <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="About"/>&ndash;&gt;-->
-            <!--            </action>-->
-
-            <!--            <action id="WavingConverterCodeAction" class="io.vortex.cvtr.trash.action.WavingConverterCodeAction" text="Wave Conversion Code Below">-->
-            <!--                <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
-            <!--            </action>-->
-        </group>
-
         <action id="io.vortex.cvtr.process.TestAction" class="io.vortex.cvtr.process.TestAction" text="wavingTest">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
