@@ -1,0 +1,67 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>io.vortex.cvtr</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>Cvtr</name>
+    <vendor>lithiumnzinc</vendor>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <!--    <vendor email="support@yourcompany.com"-->
+    <!--            url="https://www.yourcompany.com">YourCompany-->
+    <!--    </vendor>-->
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description>
+
+        <![CDATA[
+      <p>Cvtr means Convertor. Helps to generate logic code of converting one instance into other class object.</p>
+      <p>Support multi-nested class instance. But the matching condition is</p>
+      <p>Only when the concrete type and name are both equivalent can we match the returning variable to the parameter.</p>
+      <br/>
+      <p>代码生成：通过选中一个转换的方法，自动生成匹配的转换代码</p>
+      <p>只有在具体的类和变量名都匹配时才可以正确的生成，具体还需要生成后手动修改</p>
+      <p>TODO: 添加自定义转换规则及匹配规则</P>
+
+        ]]>
+
+    </description>
+    
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+<!--        报错居然不影响运行？-->
+        <postStartupActivity implementation="io.vortex.cvtr.PsiTypeEnsurance"/>
+    </extensions>
+
+    <actions>
+        <!--        <action id="io.vortex.cvtr.trash.ShowProjectNameAction" class="io.vortex.cvtr.trash.ShowProjectNameAction" text="show project name with popup dialog">-->
+        <!--            <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="About"/>-->
+        <!--        </action>-->
+
+        <group id="CvtrDemo.HelloAction" text="Cvtr Idea Plugin Demo" description="About this idea plugin">
+            <!--            <add-to-group group-id="MainMenu" anchor="last"/>-->
+            <!--            <action id="io.vortex.cvtr.trash.ShowProjectNameAction" class="io.vortex.cvtr.trash.ShowProjectNameAction" text="show project name with popup dialog">-->
+            <!--&lt;!&ndash;                <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="About"/>&ndash;&gt;-->
+            <!--            </action>-->
+
+            <!--            <action id="WavingConverterCodeAction" class="io.vortex.cvtr.trash.action.WavingConverterCodeAction" text="Wave Conversion Code Below">-->
+            <!--                <add-to-group group-id="EditorPopupMenu" anchor="first"/>-->
+            <!--            </action>-->
+        </group>
+
+        <action id="io.vortex.cvtr.process.TestAction" class="io.vortex.cvtr.process.TestAction" text="wavingTest">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
