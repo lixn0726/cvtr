@@ -5,7 +5,8 @@ import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationInfo;
-import io.vortex.cvtr.process.data.MethodProcessContext;
+import com.intellij.psi.PsiMethod;
+import io.vortex.cvtr.model.MethodProcessContext;
 
 public class ProjectNotification {
 
@@ -38,13 +39,29 @@ public class ProjectNotification {
         doNotify(ctx, title, message, NotificationType.ERROR);
     }
 
+    public static void notifyWarning(PsiMethod method, String title, String message) {
+        doNotify(method, title, message, NotificationType.WARNING);
+    }
+
+    public static void notifyInfo(PsiMethod method, String title, String message) {
+        doNotify(method, title, message, NotificationType.INFORMATION);
+    }
+
+    public static void notifyError(PsiMethod method, String title, String message) {
+        doNotify(method, title, message, NotificationType.ERROR);
+    }
+
     private static void doNotify(MethodProcessContext ctx, String title, String message, NotificationType type) {
+        doNotify(ctx.getMethod(), title, message, type);
+    }
+
+    private static void doNotify(PsiMethod method, String title, String message, NotificationType type) {
         if (curIdeaVersionIsLaterThan2020_3) {
             notificationGroupForLater.createNotification(title, message, type)
-                    .notify(ctx.getMethod().getProject());
+                    .notify(method.getProject());
         } else {
             notificationGroupForPrevious.createNotification(title, message, type)
-                    .notify(ctx.getMethod().getProject());
+                    .notify(method.getProject());
         }
     }
 }

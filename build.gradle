@@ -12,24 +12,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation 'junit:junit:4.12'
-}
-
-// 告知Gradle 当前使用的Idea版本信息
 intellij {
     pluginName = 'cvtr'
     version = '2024.2'
 //    type = 'IC'
     plugins = ['com.intellij.java']
 //    updateSinceUntilBuild.set(false)
-}
-
-tasks {
-    patchPluginXml {
-//        sinceBuild = 'false'
-        // todo set
-        //  1. version
-        //  2. sinceBuild
-    }
 }

@@ -1,7 +1,5 @@
 package io.vortex.cvtr;
 
-import com.intellij.ide.StandardTargetWeights;
-
 public class SpecialCharacters {
 
     public static String space() {
@@ -26,10 +24,6 @@ public class SpecialCharacters {
 
     public static String lineSeparator() {
         return System.lineSeparator();
-    }
-
-    public static String equalAndNewWithSpace() {
-        return " = new ";
     }
 
 }

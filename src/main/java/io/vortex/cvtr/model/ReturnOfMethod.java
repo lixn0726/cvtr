@@ -1,12 +1,12 @@
-package io.vortex.cvtr.process.data;
+package io.vortex.cvtr.model;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTypesUtil;
-import io.vortex.cvtr.JavaClassSupport;
+import io.vortex.cvtr.JavaClassUtil;
 import io.vortex.cvtr.PsiTypeEnsurance;
-import io.vortex.cvtr.StringSupport;
+import io.vortex.cvtr.StringUtil;
 
 import java.util.*;
 
@@ -32,8 +32,8 @@ public class ReturnOfMethod {
         this.returnType = PsiTypeEnsurance.ensurePrimitiveToBoxed(returnType);
         this.returnTypePsiClass = returnTypePsiClass;
         this.returnTypeCanonicalName = returnTypePsiClass.getQualifiedName();
-        this.isPlainObject = JavaClassSupport.Api.isPlainObject(returnTypePsiClass);
-        this.rootVariable = Variable.describeFor(returnType, StringSupport.lowerFirst(returnTypePsiClass.getName()));
+        this.isPlainObject = JavaClassUtil.Api.isPlainObject(returnTypePsiClass);
+        this.rootVariable = Variable.describeFor(returnType, StringUtil.lowerFirst(returnTypePsiClass.getName()));
 
         // todo:lithiumnzinc 2024/8/14 10:08 > 这个 extract 方法放在 Variable 类里面比较好
         this.insidePlainVariables = extractPlainVariables(rootVariable);
@@ -46,7 +46,7 @@ public class ReturnOfMethod {
     }
 
     public Variable findVariableByRoute(String route) {
-        if (StringSupport.isBlankStr(route)) {
+        if (StringUtil.isBlankStr(route)) {
             return Variable.unknown();
         }
         Variable variable = router.get(route);

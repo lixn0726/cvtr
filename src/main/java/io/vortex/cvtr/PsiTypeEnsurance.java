@@ -11,6 +11,7 @@ import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+// Inject attributes when the plugin started.
 public class PsiTypeEnsurance implements ProjectActivity {
 
     private static PsiTypeEnsurance instance;

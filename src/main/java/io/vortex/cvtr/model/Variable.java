@@ -1,59 +1,65 @@
-package io.vortex.cvtr.process.data;
+package io.vortex.cvtr.model;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiType;
 import com.intellij.psi.util.PsiTypesUtil;
-import io.vortex.cvtr.JavaClassSupport;
+import io.vortex.cvtr.JavaClassUtil;
 import io.vortex.cvtr.PsiTypeEnsurance;
 import io.vortex.cvtr.SpecialCharacters;
-import io.vortex.cvtr.StringSupport;
+import io.vortex.cvtr.StringUtil;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Variable {
 
-    // todo:lithiumnzinc 2024/8/14 20:32 >
-    private static final List<String> marker = new ArrayList<>();
-
     private static final String ROUTE_SEPARATE_REGEX = "\\.";
 
     private final String name;
 
-    // 统一装换成包装类型来处理
     private final PsiType psiType;
 
+    // 在几种情况下可能会null
+    // 1. 基本类型 int double short ...
+    // 2. 数组类型 int[] String[]
+    // 3. 泛型类型 List<String> Set<Integer>
+    // 4. 未解析的类型 Unknown Class/undefined Class
+    // 5. 匿名类或者内部类 有时候可能会
+    // 6. 特殊类型 void
+    // 7. 某些情况下类型解析失败也是为null
     private final PsiClass psiClass;
 
     private final boolean isPlainObject;
 
     private final Variable[] insideVariables;
 
+    // 从 1.包含这个 variable的 2.变量 到 3.这个变量 4.的引用路径
     private final String refRoute;
 
     private Variable(PsiType psiType, String name, String refRoute) {
-        // todo:lithiumnzinc 2024/8/13 20:50 > 这里的 GlobalSearchScope 是误打误撞搞出来的 后续最好搞清楚或者改掉
         this.psiType = PsiTypeEnsurance.ensurePrimitiveToBoxed(psiType);
         this.name = name;
         this.refRoute = refRoute;
-        this.psiClass = PsiTypesUtil.getPsiClass(psiType);
-        this.isPlainObject = JavaClassSupport.Api.isPlainObject(psiType);
-
-        if (Objects.isNull(psiClass)) {
-            this.insideVariables = new Variable[0];
-            return;
-        }
+        this.psiClass = PsiTypesUtil.getPsiClass(this.psiType);
+        this.isPlainObject = JavaClassUtil.Api.isPlainObject(psiType);
 
         if (isPlainObject) {
-            this.insideVariables = new Variable[psiClass.getAllFields().length];
+            if (Objects.isNull(psiClass)) {
+                // todo:lithiumnzinc 2024/8/21 14:11 >
+//                ProjectNotification.notifyError();
+                this.insideVariables = new Variable[0];
+                return;
+            }
+            PsiField[] allFields = psiClass.getAllFields();
+            this.insideVariables = new Variable[allFields.length];
             int arrIdx = 0;
 
-            for (PsiField field : psiClass.getAllFields()) {
+            for (PsiField field : allFields) {
                 PsiType fieldType = PsiTypeEnsurance.ensurePrimitiveToBoxed(field.getType());
+
                 PsiClass fieldClass = PsiTypesUtil.getPsiClass(fieldType);
                 String fieldName = field.getName();
                 Variable element;
@@ -72,7 +78,7 @@ public class Variable {
     }
 
     public static Variable unknown() {
-        return new Variable(null, null, StringSupport.emptyStr());
+        return new Variable(null, null, StringUtil.emptyStr());
     }
 
     public static Variable describeFor(PsiParameter param) {
@@ -97,6 +103,7 @@ public class Variable {
 
     public VariableMatchResult canMatchVariable(PsiType variableType, String variableName) {
         variableType = PsiTypeEnsurance.ensurePrimitiveToBoxed(variableType);
+        // todo
         if (this.psiType.equals(variableType) && this.name.equals(variableName)) {
             return VariableMatchResult.success(this);
         }
@@ -122,7 +129,7 @@ public class Variable {
         if (separatedRoute.length > 1) {
             for (int i = 1; i < separatedRoute.length; i++) {
                 res.append(".get")
-                        .append(StringSupport.upperFirst(separatedRoute[i]))
+                        .append(StringUtil.upperFirst(separatedRoute[i]))
                         .append("()");
             }
         }
@@ -132,7 +139,7 @@ public class Variable {
 
     public String methodTextOfSettingThis(MethodProcessContext ctx, String variableToSetThis) {
         if (!this.refRoute.contains(variableToSetThis)) {
-            return StringSupport.emptyStr();
+            return StringUtil.emptyStr();
         }
         String[] separatedRoute = this.refRoute.split(ROUTE_SEPARATE_REGEX);
         StringBuilder res = new StringBuilder();
@@ -143,7 +150,6 @@ public class Variable {
         if (separatedRoute.length > 1) {
             for (int i = 0; i < separatedRoute.length - 1; i++) {
                 String pair = separatedRoute[i] + "." + separatedRoute[i + 1];
-                // todo:lithiumnzinc 2024/8/14 18:09 > 这里的 marker 需要改造成带有生命周期的
                 if (ctx.isKnownRoute(pair)) {
                     continue;
                 }
@@ -160,7 +166,7 @@ public class Variable {
                 res.append(SpecialCharacters.twoTabSpace())
                         .append(separatedRoute[i])
                         .append(".set")
-                        .append(StringSupport.upperFirst(separatedRoute[i + 1]))
+                        .append(StringUtil.upperFirst(separatedRoute[i + 1]))
                         .append("(");
 
                 if (variableInReturn.isPlainObject) {
@@ -181,7 +187,7 @@ public class Variable {
         } else {
             res.append(separatedRoute[0])
                     .append(".set")
-                    .append(StringSupport.upperFirst(this.name))
+                    .append(StringUtil.upperFirst(this.name))
                     .append("(")
                     .append(ctx.getMethodSignature().getOrderedParameters()
                             .canMatchVariable(this)
@@ -192,7 +198,7 @@ public class Variable {
     }
 
     private VariableMatchResult searchInside(String name) {
-        if (StringSupport.isBlankStr(name)) {
+        if (StringUtil.isBlankStr(name)) {
             return VariableMatchResult.failure();
         }
         if (!isPlainObject) {

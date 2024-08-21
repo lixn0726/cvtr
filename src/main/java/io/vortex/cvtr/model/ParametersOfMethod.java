@@ -1,13 +1,15 @@
-package io.vortex.cvtr.process.data;
+package io.vortex.cvtr.model;
 
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.PsiParameter;
 import com.intellij.psi.PsiParameterList;
 import com.intellij.psi.PsiType;
-import io.vortex.cvtr.StringSupport;
-import org.bouncycastle.asn1.dvcs.DVCSObjectIdentifiers;
+import io.vortex.cvtr.StringUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class ParametersOfMethod {
 
@@ -55,7 +57,7 @@ public class ParametersOfMethod {
     }
 
     public VariableMatchResult canMatchVariable(Variable variable) {
-        if (Objects.isNull(variable.getPsiType()) || StringSupport.isBlankStr(variable.getName())) {
+        if (Objects.isNull(variable.getPsiType()) || StringUtil.isBlankStr(variable.getName())) {
             return VariableMatchResult.failure();
         }
         return canMatchVariable(variable.getPsiType(), variable.getName());
@@ -80,7 +82,7 @@ public class ParametersOfMethod {
     }
 
     public Variable findVariableByRoute(String route) {
-        if (StringSupport.isBlankStr(route)) {
+        if (StringUtil.isBlankStr(route)) {
             return Variable.unknown();
         }
         Variable variable = router.get(route);

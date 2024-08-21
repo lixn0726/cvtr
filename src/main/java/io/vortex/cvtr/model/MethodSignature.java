@@ -1,4 +1,4 @@
-package io.vortex.cvtr.process.data;
+package io.vortex.cvtr.model;
 
 import com.intellij.psi.PsiMethod;
 

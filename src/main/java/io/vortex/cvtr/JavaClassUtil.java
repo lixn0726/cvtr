@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class JavaClassSupport {
+public class JavaClassUtil {
 
     private static class JdkTypesSupport {
 
@@ -60,7 +60,7 @@ public class JavaClassSupport {
         }
 
         public static boolean isJdkType(String type) {
-            return StringSupport.isBlankStr(type) || type.startsWith("java");
+            return StringUtil.isBlankStr(type) || type.startsWith("java");
         }
 
         public static boolean isPrimitiveType(PsiClass type) {
@@ -71,12 +71,17 @@ public class JavaClassSupport {
             return JdkTypesSupport.javaPrimitiveTypes.contains(type);
         }
 
+        public static boolean isArrayType(PsiType type) {
+            PsiClass clz = PsiTypesUtil.getPsiClass(type);
+            return !Objects.isNull(clz) && isArrayType(clz);
+        }
+
         public static boolean isArrayType(PsiClass type) {
             return isArrayType(type.getName());
         }
 
         public static boolean isArrayType(String type) {
-            if (StringSupport.isBlankStr(type)) {
+            if (StringUtil.isBlankStr(type)) {
                 return false;
             }
             return type.endsWith("[]");
@@ -102,9 +107,23 @@ public class JavaClassSupport {
             return JdkTypesSupport.javaBoxingTypes.contains(type);
         }
 
+        public static boolean isCollectionType(PsiType type) {
+            PsiClass clz = PsiTypesUtil.getPsiClass(type);
+            return !Objects.isNull(clz) && isCollectionType(clz);
+        }
+
+        public static boolean isCollectionType(PsiClass clz) {
+            return isListType(clz) || isMapType(clz);
+        }
+
+        public static boolean isListType(PsiType psiType) {
+            PsiClass clz = PsiTypesUtil.getPsiClass(psiType);
+            return !Objects.isNull(clz) && isListType(clz);
+        }
+
         public static boolean isListType(PsiClass psiClass) {
             String qualifiedName = psiClass.getQualifiedName();
-            if (StringSupport.isBlankStr(qualifiedName)) {
+            if (StringUtil.isBlankStr(qualifiedName)) {
                 return false;
             }
             if (psiClass.isInterface()) {
@@ -123,7 +142,7 @@ public class JavaClassSupport {
 
         public static boolean isMapType(PsiClass psiClass) {
             String qualifiedName = psiClass.getQualifiedName();
-            if (StringSupport.isBlankStr(qualifiedName)) {
+            if (StringUtil.isBlankStr(qualifiedName)) {
                 return false;
             }
             if (psiClass.isInterface()) {

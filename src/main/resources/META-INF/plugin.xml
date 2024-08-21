@@ -23,9 +23,11 @@
       <p>Support multi-nested class instance. But the matching condition is</p>
       <p>Only when the concrete type and name are both equivalent can we match the returning variable to the parameter.</p>
       <br/>
-      <p>代码生成：通过选中一个转换的方法，自动生成匹配的转换代码</p>
-      <p>只有在具体的类和变量名都匹配时才可以正确的生成，具体还需要生成后手动修改</p>
-      <p>TODO: 添加自定义转换规则及匹配规则</P>
+      <p>转换器代码生成：通过选中一个转换的方法，自动生成匹配的类型转换代码</p>
+      <p>只有在具体的类和变量名都匹配时才可以正确的生成，一般来说，最好在代码生成之后自行检查一遍</p>
+      <p>目前支持简单的自定义数据类，并允许多层嵌套。但是需要自行注意每个类中的变量名不出现重复，否则会出现意料之外的错误</p>
+      <p>后续版本可能会添加：1.支持多种入参格式，比如List<?>，Map<?,?>这种容器</p>
+      <p>                 2.添加自定义转换规则及匹配规则</P>
 
         ]]>
 
@@ -46,7 +48,7 @@
     </extensions>
 
     <actions>
-        <action id="io.vortex.cvtr.process.TestAction" class="io.vortex.cvtr.process.TestAction" text="wavingTest">
+        <action id="io.vortex.cvtr.ConversionTrigger" class="io.vortex.cvtr.ConversionTrigger" text="Convert Here">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
         </action>
     </actions>
