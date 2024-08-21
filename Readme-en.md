@@ -38,7 +38,7 @@ And there are some additional parameters that we may need. And now, we can easil
 
 CLICK THAT. And you will see all the auto-generated code for this conversion method in your methods' body like below:
 
-![convert result](https://raw.github.com/lixn0726/cvtr/blob/master/img/convert.png)
+![convert result](https://github.com/lixn0726/cvtr/blob/master/img/convert.png)
 
 As i said, this tool is not that perfect, all it can do is to reduce our workload and make all the conversion code visible. Every matched variable will be filled automatically, and the variable that cannot be matched will left an empty bracket in the editor, and you should do it by your self.
 
