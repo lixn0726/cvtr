@@ -24,7 +24,7 @@ public class ReturnOfMethod {
     private final Variable rootVariable;
 
     // todo:lithiumnzinc 2024/8/14 09:58 > 这里的问题在于 如果用数组的话 没有办法提前知道元素的个数
-    private List<Variable> insidePlainVariables;
+    private final List<Variable> insidePlainVariables;
 
     private final Map<String, Variable> router = new HashMap<>();
 
